@@ -11,8 +11,20 @@
 {% endfor %}
 
 <form method="post">
-    <label for="message">Message</label>
-    <input name="message" id="message" required>
+    <p><label for="message">Message</label></p>
+    <textarea rows=4 cols=32 name="message" id="message" required> </textarea>
+    <p>
+        <label for="color">Color Selection</label>
+        <select id="color" name="color">
+            <option value="gb">Green on Black</option>
+            <option value="rb">Red on Black</option>
+            <option value="ob">Orange on Black</option>
+            <option value="bg">Black on Green</option>
+            <option value="br">Black on Red</option>
+            <option value="bo">Black on Orange</option>
+        </select>
+    </p>
+    <p>
     <input type="submit" value="Send It!">
 </form>
 {% endblock %}

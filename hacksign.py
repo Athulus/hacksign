@@ -5,22 +5,23 @@ import socket
 # Constants
 COLUMNS = 32
 LINES = 4
-COLOR_GREEN_BLACK = chr(27) + "[31{"
-COLOR_RED_BLACK = chr(27) + "[30{"
-COLOR_ORANGE_BLACK = chr(27) + "[29{"
-COLOR_BLACK_GREEN = chr(27) + "[63{"
-COLOR_BLACK_RED = chr(27) + "[62{"
-COLOR_BLACK_ORANGE = chr(27) + "[61{"
+ESC = chr(27)
+COLOR_GREEN_BLACK = ESC + "[31{"
+COLOR_RED_BLACK = ESC + "[30{"
+COLOR_ORANGE_BLACK = ESC + "[29{"
+COLOR_BLACK_GREEN = ESC + "[63{"
+COLOR_BLACK_RED = ESC + "[62{"
+COLOR_BLACK_ORANGE = ESC + "[61{"
 
 # Colors array
-colors = [
-    COLOR_GREEN_BLACK,
-    COLOR_RED_BLACK,
-    COLOR_ORANGE_BLACK,
-    COLOR_BLACK_GREEN,
-    COLOR_BLACK_RED,
-    COLOR_BLACK_ORANGE,
-]
+colors = {
+    "gb": COLOR_GREEN_BLACK,
+    "rb": COLOR_RED_BLACK,
+    "ob": COLOR_ORANGE_BLACK,
+    "bg": COLOR_BLACK_GREEN,
+    "br": COLOR_BLACK_RED,
+    "bo": COLOR_BLACK_ORANGE,
+}
 
 
 app = Flask(__name__)
@@ -32,8 +33,9 @@ app.config.from_mapping(SECRET_KEY="dev")
 def main():
     if request.method == "POST":
         message = request.form["message"]
+        color = colors[request.form["color"]]
         print(message)
-        send_to_sign(message=message, message_color=COLOR_GREEN_BLACK)
+        send_to_sign(message=message, message_color=color)
         flash(f"'{message}' sent to the sign")
         return redirect(url_for("main"))
     return render_template("hacksign.html")
@@ -55,24 +57,13 @@ def send_to_sign(
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
     # Clear entire screen
-    sock.sendall(chr(27).encode() + "[2J".encode())
-    # Loop through lines and columns
-    for line in range(1, LINES + 1):
-        sock.sendall(chr(27).encode() + "[{};1H".format(line).encode())
-        color_cycle = iter(colors)
-        for column in range(1, COLUMNS + 1):
-            try:
-                color = next(color_cycle)
-            except StopIteration:
-                color_cycle = iter(colors)
-                color = next(color_cycle)
-            sock.sendall(color.encode() + chr(36).encode())
+    sock.sendall(ESC.encode() + "[2J".encode())
     # Custom message at a specific position
     custom_message = f"{message_color} {message} "
     sock.sendall(
-        chr(27).encode()
-        + "[2;1H".encode()
-        + chr(27).encode()
+        ESC.encode()
+        + "[;H".encode()
+        + ESC.encode()
         + "[0K".encode()
         + custom_message.encode()
     )
