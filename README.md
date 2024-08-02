@@ -12,3 +12,11 @@ you need to be on the hackrva network
 pipenv install
 flask --app hacksign run
 ```
+
+## to run in prod
+pull the code onto the deployment server
+
+start gunicorn
+```
+gunicorn -b 0.0.0.0 hacksign:app
+```
