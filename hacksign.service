@@ -3,6 +3,9 @@ Description=Run the hacksign web server that sends messages to an LED sign
 
 [Service]
 Type=simple
+User=max
+Group=max
+WorkingDirectory=/home/max/hacksign
 ExecStart=/home/max/hacksign/deploy.sh
 Restart=always  
 
