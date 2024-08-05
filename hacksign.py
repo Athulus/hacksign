@@ -51,21 +51,21 @@ def test_sign(message: str):
 def send_to_sign(
     message, message_color=COLOR_BLACK_GREEN, host="10.200.200.98", port=23
 ):
+    """
+    this will establish a connection to the sign, clear the screen, and send the provided message
+    starting at the top left of the screen
+
+    the default host and port are what were hardcoded into the sign when this app was made. change them if nessecary
+    """
     # Establish socket connection
-    host = host  # Replace with the correct host
-    port = port  # Replace with the correct port
+    host = host
+    port = port
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
     # Clear entire screen
     sock.sendall(ESC.encode() + "[2J".encode())
     # Custom message at a specific position
-    custom_message = f"{message_color} {message} "
-    sock.sendall(
-        ESC.encode()
-        + "[;H".encode()
-        + ESC.encode()
-        + "[0K".encode()
-        + custom_message.encode()
-    )
+    custom_message = f"{message_color}{message} "
+    sock.sendall(ESC.encode() + "[;H".encode() + custom_message.encode())
     # Close the socket
     sock.close()
