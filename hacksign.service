@@ -3,9 +3,8 @@ Description=Run the hacksign web server that sends messages to an LED sign
 
 [Service]
 Type=simple
-User=max
-ExecStart=/home/max/.local/share/virtualenvs/hacksign-Q6Ya1UPn/bin/python /home/max/.local/share/virtualenvs/hacksign-Q6Ya1UPn/bin/gunicorn -b 0.0.0.0 hacksign:app
-Restart=always
+ExecStart=/home/max/hacksign/deploy.sh
+Restart=always  
 
 [Install]
 WantedBy=default.target
